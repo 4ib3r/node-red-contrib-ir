@@ -6,6 +6,11 @@ module.exports = function(RED) {
         this.debug = config.debug || false;
         this.keyMap = config.keymap || {};
         var node = this;
+        this.on('close', function() {
+            if (ir !== undefined && ir.stop !== undefined) {
+                ir.stop();
+            }
+        });
         ir.start();
 	var lastKey = null;
         var mappKey = function(key) {
@@ -31,7 +36,6 @@ module.exports = function(RED) {
                 node.status({fill:"red",shape:"ring",text:"Key: " + mappedKey});
             }
         });
-        this.on('close', ir.stop);
     }
     RED.nodes.registerType("banana-ir in", BpiIrOutNode);
 }
